@@ -1,6 +1,6 @@
 {
   "name": "continue-stream",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Lazily merge multiple streams in to a single stream",
   "main": "index.js",
   "scripts": {
