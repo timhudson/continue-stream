@@ -24,16 +24,14 @@
   },
   "homepage": "https://github.com/timhudson/continue-stream",
   "devDependencies": {
+    "JSONStream": "^0.9.0",
+    "ldjson-stream": "^1.2.1",
+    "pumpify": "^1.3.2",
+    "request": "^2.40.0",
     "tape": "^2.14.0",
     "through2": "^0.6.1"
   },
   "dependencies": {
     "readable-stream": "^1.0.31"
-  },
-  "optionalDependencies": {
-    "JSONStream": "^0.9.0",
-    "ldjson-stream": "^1.2.1",
-    "pumpify": "^1.3.2",
-    "request": "^2.40.0"
   }
 }
