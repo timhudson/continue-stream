@@ -1,4 +1,5 @@
 var Readable = require('readable-stream')
+var eos = require('end-of-stream')
 var util = require('util')
 
 util.inherits(ContinueStream, Readable)
@@ -20,11 +21,8 @@ ContinueStream.prototype.nextStream = function() {
 
     this._source = source
 
-    source.on('error', function(err) {
-      this.emit('error', err)
-    }.bind(this))
-
-    source.on('end', function() {
+    eos(source, function(err) {
+      if (err) return this.emit('error', err)
       this.nextStream()
     }.bind(this))
 
