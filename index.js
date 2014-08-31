@@ -16,7 +16,7 @@ function ContinueStream(next, options) {
 ContinueStream.prototype.nextStream = function() {
   this.next(function(source) {
     if (!source) return this.push(null)
-    if (!source.read) source = new Readable().wrap(source)
+    if (!source._readableState) source = new Readable().wrap(source)
 
     this._source = source
 
