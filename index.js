@@ -27,20 +27,27 @@ ContinueStream.prototype.nextStream = function() {
     }.bind(this))
 
     source.on('readable', function() {
-      this.read(0)
-      this.readFromSource()
+      this._forward()
     }.bind(this))
 
   }.bind(this), this._source)
 }
 
-ContinueStream.prototype._read = function(n) {
-  if (this._source) this.readFromSource(n)
+ContinueStream.prototype._read = function() {
+  this._drained = true
+  this._forward()
 }
 
-ContinueStream.prototype.readFromSource = function(n) {
-  var chunk = this._source.read()
-  if (chunk) this.push(chunk)
+ContinueStream.prototype._forward = function() {
+  if (this._forwarding || !this._source || !this._drained) return
+  this._forwarding = true
+
+  var data
+  while ((data = this._source.read()) !== null) {
+    this._drained = this.push(data)
+  }
+
+  this._forwarding = false
 }
 
 module.exports = ContinueStream
