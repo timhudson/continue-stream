@@ -12,7 +12,7 @@ tape('continueStream', function(t) {
     if (count > 3) return callback()
 
     var source = through()
-    callback(source)
+    callback(null, source)
 
     source.end(++count + '')
   }
@@ -32,7 +32,7 @@ tape('continueStream.obj', function(t) {
     if (count > 3) return callback()
 
     var source = through.obj()
-    callback(source)
+    callback(null, source)
 
     source.end({count: ++count})
   }
@@ -43,13 +43,28 @@ tape('continueStream.obj', function(t) {
     })
 })
 
+tape('callback errors', function(t) {
+  t.plan(1)
+
+  function next(callback) {
+    process.nextTick(function() {
+      callback(new Error('THWACK'))
+    })
+  }
+
+  continueStream(next)
+    .on('error', function(err) {
+      t.equal(err.message, 'THWACK')
+    })
+})
+
 tape('proxy errors', function(t) {
   t.plan(2)
 
   var stream = through()
 
   continueStream(function(callback) {
-    callback(stream)
+    callback(null, stream)
   })
     .on('data', function(data) {
       t.equal(data.toString(), 'pugme')

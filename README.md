@@ -29,7 +29,7 @@ function next(callback, previousStream) {
     headers: {'user-agent': 'pug'}
   })
 
-  callback(stream)
+  callback(null, stream)
 }
 
 continueStream(next)
@@ -57,7 +57,7 @@ function next(callback, previousStream) {
 
   var stream = pumpify.obj(req, JSONStream.parse('*'))
 
-  callback(stream)
+  callback(null, stream)
 }
 
 continueStream.obj(next)
