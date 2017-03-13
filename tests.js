@@ -1,15 +1,16 @@
 var tape = require('tape')
 var through = require('through2')
 var readable = require('readable-stream')
+var concat = require('concat-stream')
 var continueStream = require('./')
 
 tape('continueStream', function(t) {
-  t.plan(3)
+  t.plan(1)
 
-  var count = 1
+  var count = 0
 
   function next(callback) {
-    if (count > 3) return callback()
+    if (count === 3) return callback()
 
     var source = through()
     callback(null, source)
@@ -18,18 +19,18 @@ tape('continueStream', function(t) {
   }
 
   continueStream(next)
-    .on('data', function(data) {
-      t.equal(data.toString(), count + '')
-    })
+    .pipe(concat(function (data) {
+      t.equal(data.toString(), '123')
+    }))
 })
 
 tape('continueStream.obj', function(t) {
-  t.plan(3)
+  t.plan(1)
 
-  var count = 1
+  var count = 0
 
   function next(callback) {
-    if (count > 3) return callback()
+    if (count === 3) return callback()
 
     var source = through.obj()
     callback(null, source)
@@ -38,9 +39,13 @@ tape('continueStream.obj', function(t) {
   }
 
   continueStream.obj(next)
-    .on('data', function(data) {
-      t.equal(data.count, count)
-    })
+    .pipe(concat(function (data) {
+      t.deepEqual(data, [
+        {count: 1},
+        {count: 2},
+        {count: 3}
+      ])
+    }))
 })
 
 tape('callback errors', function(t) {
