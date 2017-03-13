@@ -39,7 +39,7 @@ continueStream(next)
 
 Or you can use `continueStream.obj` as a convenience for `objectMode`
 
-```
+``` js
 var continueStream = require('continue-stream')
 var request = require('request')
 var pumpify = require('pumpify')
